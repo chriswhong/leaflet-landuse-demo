@@ -6,22 +6,59 @@
   left: 0;
 }
 
-.fly-to-random {
+#title-container {
   position: absolute;
-  left: 10px;
-  bottom: 10px;
   z-index: 1000;
-  font-size: 30px;
-  padding: 10px;
-  border-radius: 10px;
+  top: 11px;
+  left: 56px;
+  background: #FFF;
+  padding: 15px;
+  border-radius: 7px;
 }
 
-.reset {
-  position: absolute;
-  left: 380px;
-  bottom: 10px;
-  z-index: 1000;
-  font-size: 30px;
-  padding: 10px;
-  border-radius: 10px;
+h1, h3  {
+  margin: 0;
+}
+
+button {
+  outline: none;
+  padding: 6px;
+  background-color: #e2d6ff;
+  border-radius: 15px;
+}
+
+#legend {
+  float: right;
+  background: #e6e6e6;
+  padding: 12px;
+  margin-left: 15px;
+}
+
+.legendItem {
+}
+
+.legendItem::before {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  -moz-border-radius: 7.5px;
+  -webkit-border-radius: 7.5px;
+  border-radius: 16.5px;
+  border: 2px solid #FFF;
+  position: relative;
+  top: 4px;
+  margin-right: 5px;
+}
+
+.wagner::before {
+  background-color: purple;
+}
+
+.cusp::before {
+  background-color: green;
+}
+
+.life::before {
+  background-color: orange;
 }

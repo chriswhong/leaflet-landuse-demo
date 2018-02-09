@@ -73,6 +73,9 @@ var pizzaData = [
 //     .bindPopup(chrisPizza.name + ' likes to eat at ' +  chrisPizza.pizzaShop);
 
 
+// create an empty markers array that we can fill with markers
+var markersArray = [];
+
 // how to add a marker for each object in the array
 
 pizzaData.forEach(function(pizzaObject) {
@@ -85,7 +88,7 @@ pizzaData.forEach(function(pizzaObject) {
   if (pizzaObject.school === 'Life') schoolColor = 'orange';
 
   var options = {
-    radius: 10,
+    radius: 6,
     opacity: 1,
     fillColor: schoolColor,
     fillOpacity: 0.9,
@@ -93,17 +96,20 @@ pizzaData.forEach(function(pizzaObject) {
     weight: 2,
   };
 
-
-
-  L.circleMarker(latLon, options).addTo(map)
-      .bindPopup(pizzaObject.name + ' likes to eat at ' +  pizzaObject.pizzaShop);
+  var marker = L.circleMarker(latLon, options)
+      .bindPopup(pizzaObject.name + ' likes to eat at ' +  pizzaObject.pizzaShop, {offset: [0, -6]})
+      .addTo(map)
+  // add the marker to the markersArray
+  markersArray.push(marker);
 });
 
-$('.fly-to-random').click(function() {
-  var randomPizzaObject = pizzaData[Math.floor(Math.random()*pizzaData.length)];
-  console.log(randomPizzaObject);
-  map.flyTo([randomPizzaObject.lat, randomPizzaObject.lon], 16)
+$('.fly-to-random').click(function(e) {
+  var randomMarker = markersArray[Math.floor(Math.random() * markersArray.length)];
+  map.setView(randomMarker._latlng);
+  randomMarker.openPopup();
+  e.stopPropagation();
 });
+
 
 $('.reset').click(function() {
   map.flyTo(defaultCenter, defaultZoom)
