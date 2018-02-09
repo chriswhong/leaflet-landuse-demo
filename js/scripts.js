@@ -1,4 +1,7 @@
-var map = L.map('my-map').setView([40.713435,-73.971291], 12);
+var defaultCenter = [40.713435,-73.971291];
+var defaultZoom = 12;
+
+var map = L.map('my-map').setView(defaultCenter, defaultZoom);
 
 L.tileLayer('https://a.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -73,6 +76,35 @@ var pizzaData = [
 // how to add a marker for each object in the array
 
 pizzaData.forEach(function(pizzaObject) {
-  L.marker([pizzaObject.lat, pizzaObject.lon]).addTo(map)
+  var latLon = [pizzaObject.lat, pizzaObject.lon];
+
+  var schoolColor = '#FFF';
+
+  if (pizzaObject.school === 'Wagner') schoolColor = 'purple';
+  if (pizzaObject.school === 'CUSP') schoolColor = 'green';
+  if (pizzaObject.school === 'Life') schoolColor = 'orange';
+
+  var options = {
+    radius: 10,
+    opacity: 1,
+    fillColor: schoolColor,
+    fillOpacity: 0.9,
+    color: '#FFF',
+    weight: 2,
+  };
+
+
+
+  L.circleMarker(latLon, options).addTo(map)
       .bindPopup(pizzaObject.name + ' likes to eat at ' +  pizzaObject.pizzaShop);
+});
+
+$('.fly-to-random').click(function() {
+  var randomPizzaObject = pizzaData[Math.floor(Math.random()*pizzaData.length)];
+  console.log(randomPizzaObject);
+  map.flyTo([randomPizzaObject.lat, randomPizzaObject.lon], 16)
+});
+
+$('.reset').click(function() {
+  map.flyTo(defaultCenter, defaultZoom)
 });

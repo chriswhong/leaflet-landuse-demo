@@ -5,3 +5,23 @@
   bottom: 0;
   left: 0;
 }
+
+.fly-to-random {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  z-index: 1000;
+  font-size: 30px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.reset {
+  position: absolute;
+  left: 380px;
+  bottom: 10px;
+  z-index: 1000;
+  font-size: 30px;
+  padding: 10px;
+  border-radius: 10px;
+}
