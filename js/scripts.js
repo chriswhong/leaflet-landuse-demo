@@ -1,5 +1,5 @@
-var defaultCenter = [40.713435,-73.971291];
-var defaultZoom = 12;
+var defaultCenter = [40.622813, -74.028282];
+var defaultZoom = 17;
 
 var map = L.map('my-map').setView(defaultCenter, defaultZoom);
 
@@ -7,110 +7,112 @@ L.tileLayer('https://a.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.pn
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
-var pizzaData = [
-  {
-    name: 'Chris',
-    pizzaShop: "Ben's Pizza",
-    lat: 40.730376,
-    lon: -74.0008582,
-    school: 'Wagner',
-  },
-  {
-    name: 'Maxwell',
-    pizzaShop: "Joe's",
-    lat: 40.7305876,
-    lon: -74.002141,
-    school: 'Wagner',
-  },
-  {
-    name: 'Paolo',
-    pizzaShop: "John's of Bleeker",
-    lat: 40.725717,
-    lon: -73.991492,
-    school: 'Wagner',
-  },
-  {
-    name: 'Rigel',
-    pizzaShop: "Di Fara",
-    lat: 40.6250156,
-    lon: -73.9659225,
-    school: 'Life',
-  },
-  {
-    name: 'Jack',
-    pizzaShop: "Paulie Gee's",
-    lat: 40.729662,
-    lon: -73.958579,
-    school: 'CUSP',
-  },
-  {
-    name: 'Lisanne',
-    pizzaShop: "ZuriLee",
-    lat: 40.6545,
-    lon: -73.9594,
-    school: 'Life',
-  },
-  {
-    name: 'Niki',
-    pizzaShop: "Pizza Palace",
-    lat: 40.77638,
-    lon: -73.9112052,
-    school: 'Life',
-  },
-  {
-    name: 'Monica',
-    pizzaShop: "Percy's Pizza",
-    lat: 40.72915,
-    lon: -74.001398,
-    school: 'Wagner',
-  },
-];
+const lookupLandUse = function(landUseCode) {
+  switch(landUseCode) {
+  case '01':
+    return {
+      color: "#f4f455",
+      description: 'One & Two Family'
+    }
+  case '02':
+    return {
+      color: "#f7d496",
+      description: 'Multi - Family Walk- Up Buldings'
+    }
+  case '03':
+    return {
+      color: "#FF9900",
+      description: 'Multi - Family Elevator'
+    }
+  case '04':
+    return {
+      color: "#f7cabf",
+      description: 'Mixed Residential and Commercial'
+    }
+  case '05':
+    return {
+      color: "#ea6661",
+      description: 'Commercial and Office'
+    }
+  case '06':
+    return {
+      color: "#d36ff4",
+      description: 'Industrial and Manufacturing'
+    }
+  case '07':
+    return {
+      color: "#dac0e8",
+      description: 'Transportation and Utility'
+    }
+  case '08':
+    return {
+      color: "#5CA2D1",
+      description: 'Public Facilities and Institutions'
+    }
+  case '09':
+    return {
+      color: "#8ece7c",
+      description: 'Open Space and Outdoor Recreation'
+    }
+  case '10':
+    return {
+      color: "#bab8b6",
+      description: 'Parking Facilities'
+    }
+  case '11':
+    return {
+      color: "#5f5f60",
+      description: 'Vacant Land'
+    }
+  }
+}
 
-// how to add a single marker using L.marker()
-// var chrisPizza = pizzaData[0];
-//
-// L.marker([chrisPizza.lat, chrisPizza.lon]).addTo(map)
-//     .bindPopup(chrisPizza.name + ' likes to eat at ' +  chrisPizza.pizzaShop);
+// add geojson using jquery's $.getJSON()
+$.getJSON('data/study_boundary.geojson', function(study_boundary) {
+  L.geoJSON(study_boundary, {
+    style: {
+      dashArray: '3 10',
+      color: 'white',
+      fillOpacity: 0,
+    }
+  }).addTo(map);
 
+  // Use L.geoJSON to load PLUTO parcel data that we clipped in QGIS and change the CRS from 2263 to 4326
+  // this was moved inside the getJSON callback so that the parcels will load on top of the study area study_boundary
+  var blocksGeojson = L.geoJSON(fourblocks, {
+      style: function(feature) {
 
-// create an empty markers array that we can fill with markers
-var markersArray = [];
+          return {
+            color: 'white',
+            fillColor: lookupLandUse(feature.properties.LandUse).color,
+            fillOpacity: 0.8,
+            weight: 1,
+          }
+      },
+    onEachFeature: function(feature, layer) {
+      const description = lookupLandUse(feature.properties.LandUse).description;
 
-// how to add a marker for each object in the array
+      layer.bindPopup(`${feature.properties.Address}<br/>${description}`, {
+        closeButton: false,
+        minWidth: 60,
+        offset: [0, -10]
+      });
+      layer.on('mouseover', function (e) {
+        this.openPopup();
 
-pizzaData.forEach(function(pizzaObject) {
-  var latLon = [pizzaObject.lat, pizzaObject.lon];
+        e.target.setStyle({
+          weight: 3,
+          color: '#FFF',
+        });
 
-  var schoolColor = '#FFF';
-
-  if (pizzaObject.school === 'Wagner') schoolColor = 'purple';
-  if (pizzaObject.school === 'CUSP') schoolColor = 'green';
-  if (pizzaObject.school === 'Life') schoolColor = 'orange';
-
-  var options = {
-    radius: 6,
-    opacity: 1,
-    fillColor: schoolColor,
-    fillOpacity: 0.9,
-    color: '#FFF',
-    weight: 2,
-  };
-
-  var marker = L.circleMarker(latLon, options)
-      .bindPopup(pizzaObject.name + ' likes to eat at ' +  pizzaObject.pizzaShop, {offset: [0, -6]})
-      .addTo(map)
-  // add the marker to the markersArray
-  markersArray.push(marker);
-});
-
-$('.fly-to-random').click(function(e) {
-  var randomMarker = markersArray[Math.floor(Math.random() * markersArray.length)];
-  map.setView(randomMarker._latlng);
-  randomMarker.openPopup();
-  e.stopPropagation();
-});
-
-
-$('.reset').click(function() {
-  map.flyTo(defaultCenter, defaultZoom)
-});
+        if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+            layer.bringToFront();
+        }
+      });
+      layer.on('mouseout', function (e) {
+        this.closePopup();
+        blocksGeojson.resetStyle(e.target);
+      });
+    }
+  }).addTo(map);
+})

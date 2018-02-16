@@ -4,9 +4,7 @@
 <head>
   <meta charset="utf-8">
 
-  <title>Crowdsourced Pizza Map</title>
-  <meta name="description" content="The HTML5 Herald">
-  <meta name="author" content="SitePoint">
+  <title>A Fictitious Study Area</title>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"
   integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
@@ -19,15 +17,16 @@
     <div id="title-container">
       <div id="legend">
         <h3>Legend</h3>
-        <div class="legendItem wagner">Wagner Student</div>
-        <div class="legendItem cusp">CUSP Student</div>
-        <div class="legendItem life">School of Life Student</div>
+        <div class="legendItem"><div class="colorBox" style="background: #f4f455"></div>One & Two Family</div>
+        <div class="legendItem"><div class="colorBox" style="background: #ea6661"></div>Commerical & Office</div>
+        <div class="legendItem"><div class="colorBox" style="background: #f7d496"></div>Multi-Family Walk-up</div>
+        <div class="legendItem"><div class="colorBox" style="background: #f7cabf"></div>Mixed Residential & Commerical</div>
+        <div class="legendItem"><div class="colorBox" style="background: #5CA2D1"></div>Public Facilities and Institutions</div>
+
       </div>
-      <h1>Favorite Pizzashops</h1>
-      <p>This map uses crowd-sourced data from our NYU web mapping class, showing each student's favorite Pizza place.</p>
-      <p>Click a circle to see the name of the pizza shop and which student likes to eat there.</p>
-      <button class="fly-to-random">Fly to a random pizza shop!</button>
-      <button class="reset">Reset View</button>
+      <h1>A Fictitious Study Area Map</h1>
+      <p>This map uses a clipping of MapPLUTO data to show a simple land use map for a fictitious study area in Bay Ridge.</p>
+      <p>Hover over a property to view its address and land use</p>
     </div>
   </div>
 
@@ -38,6 +37,7 @@
   src="//code.jquery.com/jquery-3.3.1.js"
   integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
   crossorigin="anonymous"></script>
+  <script src="data/fourblocks.js"></script>
   <script src="js/scripts.js"></script>
 </body>
 </html>
